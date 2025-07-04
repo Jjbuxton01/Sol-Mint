@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Solana Mint Portal</title>
+  <style>
+    body {
+      background-color: black;
+      color: lime;
+      font-family: monospace;
+      text-align: center;
+      padding-top: 100px;
+    }
+    button {
+      font-size: 18px;
+      padding: 10px 20px;
+      background: lime;
+      border: none;
+      color: black;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    #status {
+      margin-top: 30px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔗 CONNECT TO MINT</h1>
+  <button id="connectWallet">Connect Wallet</button>
+  <button id="fakeMint" style="display:none;">Mint Now</button>
+  <div id="status"></div>
+
+  <script>
+    let publicKey = null;
+
+    const connectWallet = async () => {
+      if (window.solana && window.solana.isPhantom) {
+        try {
+          const response = await window.solana.connect();
+          publicKey = response.publicKey.toString();
+          document.getElementById('status').innerText = `Connected: ${publicKey}`;
+          document.getElementById('connectWallet').style.display = 'none';
+          document.getElementById('fakeMint').style.display = 'inline-block';
+        } catch (err) {
+          document.getElementById('status').innerText = 'Connection rejected.';
+        }
+      } else {
+        alert("Phantom Wallet not found. Install it first.");
+      }
+    };
+
+    const fakeMint = () => {
+      document.getElementById('status').innerText = `Simulating mint for wallet: ${publicKey}...`;
+      setTimeout(() => {
+        document.getElementById('status').innerText = `🔥 MINT FAILED: CONTRACT RUGGED`;
+      }, 2000);
+    };
+
+    document.getElementById('connectWallet').onclick = connectWallet;
+    document.getElementById('fakeMint').onclick = fakeMint;
+  </script>
+</body>
+</html>
